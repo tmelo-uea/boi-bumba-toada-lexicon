@@ -1,0 +1,82 @@
+{
+ "agree": 66,
+ "total": 81,
+ "kappa": 0.1364605543710021,
+ "disagreements": [
+  {
+   "idx": 11,
+   "mine": "metafora",
+   "theirs": "mitica"
+  },
+  {
+   "idx": 18,
+   "mine": "mitica",
+   "theirs": "metafora"
+  },
+  {
+   "idx": 41,
+   "mine": "animal",
+   "theirs": "mitica"
+  },
+  {
+   "idx": 43,
+   "mine": "mitica",
+   "theirs": "animal"
+  },
+  {
+   "idx": 50,
+   "mine": "metafora",
+   "theirs": "mitica"
+  },
+  {
+   "idx": 51,
+   "mine": "animal",
+   "theirs": "mitica"
+  },
+  {
+   "idx": 59,
+   "mine": "mitica",
+   "theirs": "animal"
+  },
+  {
+   "idx": 60,
+   "mine": "mitica",
+   "theirs": "animal"
+  },
+  {
+   "idx": 61,
+   "mine": "mitica",
+   "theirs": "animal"
+  },
+  {
+   "idx": 75,
+   "mine": "mitica",
+   "theirs": "animal"
+  },
+  {
+   "idx": 81,
+   "mine": "animal",
+   "theirs": "mitica"
+  },
+  {
+   "idx": 82,
+   "mine": "animal",
+   "theirs": "mitica"
+  },
+  {
+   "idx": 99,
+   "mine": "mitica",
+   "theirs": "animal"
+  },
+  {
+   "idx": 106,
+   "mine": "mitica",
+   "theirs": "animal"
+  },
+  {
+   "idx": 107,
+   "mine": "mitica",
+   "theirs": "animal"
+  }
+ ]
+}
