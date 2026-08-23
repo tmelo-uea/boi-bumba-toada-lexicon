@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 """
-Step 5 (RQ2): log-likelihood keyness (Dunning's G2) between Caprichoso and
+Step 5 (RQ1): log-likelihood keyness (Dunning's G2) between Caprichoso and
 Garantido for every core-lexicon term, at both token frequency and document
 frequency (see paper Section 5.2 and Methodology note v2 for why both are
 reported: token frequency can be inflated by within-song chorus repetition).
 Institutionally-adjusted counts are used throughout for paje/cunha(-poranga)/
-tuxaua. Produces Table 3 of the paper plus the full ranking (both frequency
-types) as supplementary data.
+tuxaua. Benjamini--Hochberg false-discovery-rate correction is applied
+separately to the 46 token-frequency and 46 document-frequency tests.
+Produces Table 3 of the paper plus the full rankings as supplementary data.
 
 Usage:
     python 05_keyness_analysis.py --scores per_song_scores.json \
-        --institutional-labels ../annotations/institutional_confound/external_annotator_labels.csv \
+        --institutional-labels ../annotations/institutional_confound/chatgpt_labels.csv \
         --out-token keyness_nucleo_token_freq.csv \
         --out-doc keyness_nucleo_doc_freq.csv
 """
@@ -55,16 +56,30 @@ def institutionally_adjusted(p, song_label):
 def log_likelihood_g2(a, b, n1, n2):
     if a + b == 0:
         return 0.0, 1.0, 0
-    e1, e2 = n1 * (a + b) / (n1 + n2), n2 * (a + b) / (n1 + n2)
-    ll = 0.0
-    if a > 0:
-        ll += a * np.log(a / e1)
-    if b > 0:
-        ll += b * np.log(b / e2)
-    g2 = 2 * ll
-    p_val = 1 - stats.chi2.cdf(g2, df=1)
+    # Full 2x2 likelihood-ratio test. The complement cells are essential:
+    #                term present    term absent
+    # Caprichoso          a             n1-a
+    # Garantido           b             n2-b
+    observed = np.array([[a, n1 - a], [b, n2 - b]], dtype=float)
+    expected = np.outer(observed.sum(axis=1), observed.sum(axis=0)) / observed.sum()
+    positive = observed > 0
+    g2 = 2 * np.sum(observed[positive] * np.log(observed[positive] / expected[positive]))
+    # Survival function is numerically stable for very small p-values.
+    p_val = stats.chi2.sf(g2, df=1)
     sign = 1 if a / n1 >= b / n2 else -1
     return g2, p_val, sign
+
+
+def benjamini_hochberg(p_values):
+    """Return BH-adjusted q-values in the original input order."""
+    m = len(p_values)
+    order = sorted(range(m), key=p_values.__getitem__)
+    q_values = [1.0] * m
+    running_min = 1.0
+    for rank, idx in reversed(list(enumerate(order, start=1))):
+        running_min = min(running_min, p_values[idx] * m / rank)
+        q_values[idx] = running_min
+    return q_values
 
 
 def main():
@@ -90,29 +105,15 @@ def main():
         n_songs[boi] += 1
         adj = institutionally_adjusted(p, song_label)
 
-        # NOTE (documented design choice, not a bug): the institutional
-        # adjustment is applied to TOKEN totals only, matching the exact
-        # methodology already reported in the paper (Section 5.2 / Table 3).
-        # Document frequency below uses raw (unadjusted) presence for all
-        # terms, including the 4 confounded ones -- i.e. a song still counts
-        # toward pajé's document frequency even if that song's pajé mentions
-        # were judged institutional. This asymmetry (token adjusted, document
-        # not) was identified during a later reproducibility check of this
-        # script and is being preserved, rather than "fixed", specifically
-        # to keep this code reproducing the numbers already published in the
-        # paper. It does not change which terms are significant: none of the
-        # 4 confounded terms cross p<0.05 at document frequency either way.
-        # A fully adjusted document frequency would be a reasonable
-        # improvement for future work.
         for term, c in p['simple_counts'].items():
             v = adj[term] if term in CONFOUNDED_TERMS else c
             term_totals[boi][term] += v
-            if c > 0:
+            if v > 0:
                 doc_freq[boi][term] += 1
         for term, c in p['phrase_counts'].items():
             v = adj[term] if term in CONFOUNDED_TERMS else c
             term_totals[boi][term] += v
-            if c > 0:
+            if v > 0:
                 doc_freq[boi][term] += 1
         term_totals[boi]['cobra_grande'] += p['cobra_mitica']
         if p['cobra_mitica'] > 0:
@@ -129,18 +130,22 @@ def main():
         g2, p_val, sign = log_likelihood_g2(a, b, N1, N2)
         tok_results.append((term, a, b, a / N1 * 1000, b / N2 * 1000, g2, p_val, sign))
     tok_results.sort(key=lambda r: -r[5])
+    tok_q = benjamini_hochberg([r[6] for r in tok_results])
 
     with open(args.out_token, 'w', newline='', encoding='utf-8') as f:
-        w = csv.writer(f)
+        w = csv.writer(f, lineterminator='\n')
         w.writerow(['termo', 'freq_caprichoso', 'freq_garantido', 'norm_capr_per1000w',
-                    'norm_gara_per1000w', 'G2', 'p_value', 'mais_associado'])
-        for r in tok_results:
+                    'norm_gara_per1000w', 'G2', 'p_value', 'q_value_bh', 'mais_associado'])
+        for r, q in zip(tok_results, tok_q):
             w.writerow([r[0], r[1], r[2], round(r[3], 4), round(r[4], 4), round(r[5], 3),
-                        round(r[6], 5), 'Caprichoso' if r[7] > 0 else 'Garantido'])
+                        f'{r[6]:.10g}', f'{q:.10g}',
+                        'Caprichoso' if r[7] > 0 else 'Garantido'])
 
     n_sig_tok = sum(1 for r in tok_results if r[6] < 0.05)
+    n_fdr_tok = sum(1 for q in tok_q if q < 0.05)
     print(f"Words (N): Caprichoso={N1}, Garantido={N2}")
     print(f"Token-frequency: {n_sig_tok}/{len(tok_results)} terms nominally significant (p<0.05, uncorrected)")
+    print(f"Token-frequency: {n_fdr_tok}/{len(tok_results)} terms significant after BH FDR (q<0.05)")
 
     # ---- document-frequency keyness ----
     Nd1, Nd2 = n_songs['Caprichoso'], n_songs['Garantido']
@@ -152,22 +157,26 @@ def main():
         g2, p_val, sign = log_likelihood_g2(a, b, Nd1, Nd2)
         doc_results.append((term, a, b, a / Nd1 * 100, b / Nd2 * 100, g2, p_val, sign))
     doc_results.sort(key=lambda r: -r[5])
+    doc_q = benjamini_hochberg([r[6] for r in doc_results])
 
     with open(args.out_doc, 'w', newline='', encoding='utf-8') as f:
-        w = csv.writer(f)
+        w = csv.writer(f, lineterminator='\n')
         w.writerow(['termo', 'n_toadas_caprichoso', 'n_toadas_garantido', 'pct_toadas_caprichoso',
-                    'pct_toadas_garantido', 'G2', 'p_value', 'mais_associado'])
-        for r in doc_results:
+                    'pct_toadas_garantido', 'G2', 'p_value', 'q_value_bh', 'mais_associado'])
+        for r, q in zip(doc_results, doc_q):
             w.writerow([r[0], r[1], r[2], round(r[3], 3), round(r[4], 3), round(r[5], 3),
-                        round(r[6], 5), 'Caprichoso' if r[7] > 0 else 'Garantido'])
+                        f'{r[6]:.10g}', f'{q:.10g}',
+                        'Caprichoso' if r[7] > 0 else 'Garantido'])
 
     n_sig_doc = sum(1 for r in doc_results if r[6] < 0.05)
+    n_fdr_doc = sum(1 for q in doc_q if q < 0.05)
     print(f"Songs (N): Caprichoso={Nd1}, Garantido={Nd2}")
     print(f"Document-frequency: {n_sig_doc}/{len(doc_results)} terms nominally significant (p<0.05, uncorrected)")
+    print(f"Document-frequency: {n_fdr_doc}/{len(doc_results)} terms significant after BH FDR (q<0.05)")
 
-    tok_sig = {r[0] for r in tok_results if r[6] < 0.05}
-    doc_sig = {r[0] for r in doc_results if r[6] < 0.05}
-    print(f"\nSignificant under BOTH tests (most robust candidates): {sorted(tok_sig & doc_sig)}")
+    tok_sig = {r[0] for r, q in zip(tok_results, tok_q) if q < 0.05}
+    doc_sig = {r[0] for r, q in zip(doc_results, doc_q) if q < 0.05}
+    print(f"\nBH-significant under BOTH tests: {sorted(tok_sig & doc_sig)}")
 
 
 if __name__ == '__main__':

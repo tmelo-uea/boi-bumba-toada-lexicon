@@ -1,5 +1,10 @@
 # Instruções — classificação de ocorrências de "cobra" nas toadas de Parintins
 
+> **Proveniência da anotação.** Este protocolo foi fornecido separadamente a Claude e ChatGPT.
+> Os dois conjuntos de rótulos foram comparados e posteriormente adjudicados pelos autores.
+> Nenhum dos conjuntos foi produzido por um anotador humano ou especialista cultural. O texto
+> abaixo preserva o protocolo de tarefa empregado, inclusive sua forma de interlocução.
+
 ## Contexto
 
 Este é um pedido de apoio para um artigo científico sobre as toadas do Festival Folclórico de

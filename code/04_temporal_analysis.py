@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Step 4 (RQ1): temporal-trend analysis. Computes core-lexicon density by boi
-and decade, a per-toada linear regression of density on year, and an
-exploratory Mann-Kendall test on decade means. Produces Table 2 of the paper.
+Step 4 (exploratory RQ2): temporal-pattern analysis. Computes core-lexicon
+density by boi and decade and a per-toada linear regression of density on
+album year. Produces Table 2 of the paper.
 
 Usage:
     python 04_temporal_analysis.py --scores per_song_scores.json \
@@ -83,32 +83,6 @@ for boi in ['Caprichoso', 'Garantido']:
     direction = 'aumento' if slope > 0 else 'queda'
     sig = 'SIGNIFICATIVO' if pval < 0.05 else 'nao significativo'
     print(f"  {boi}: slope={slope:+.4f} pontos/ano ({direction}), r={r:.3f}, p={pval:.4f} [{sig}], n={len(items)}")
-
-# Mann-Kendall (nao-parametrico) como robustez, por decada (medias)
-def mann_kendall(x):
-    n = len(x)
-    s = 0
-    for i in range(n-1):
-        for j in range(i+1, n):
-            s += np.sign(x[j]-x[i])
-    var_s = n*(n-1)*(2*n+5)/18
-    if s > 0: z = (s-1)/np.sqrt(var_s)
-    elif s < 0: z = (s+1)/np.sqrt(var_s)
-    else: z = 0
-    p = 2*(1-stats.norm.cdf(abs(z)))
-    return s, z, p
-
-print("\n=== Mann-Kendall (medias por decada, ajustado) ===")
-for boi in ['Caprichoso', 'Garantido']:
-    means = []
-    for d in decades:
-        items = decade_data.get((boi, d), [])
-        if items:
-            d_adj, _, _, _ = density_stats(items, 'nucleo_adj')
-            means.append(d_adj)
-    if len(means) >= 3:
-        s, z, p = mann_kendall(means)
-        print(f"  {boi}: decadas={decades[:len(means)]}, medias={[round(m,2) for m in means]}, S={s}, p={p:.4f}")
 
 json.dump(trend_results, open(args.out_trend, 'w', encoding='utf-8'), indent=1)
 print(f"\nSaved: {args.out_density}, {args.out_trend}")

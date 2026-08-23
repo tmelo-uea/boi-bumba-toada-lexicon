@@ -1,8 +1,9 @@
 # Léxico regional-amazônico v2 — nota metodológica
 
 Consolida as mudanças da v1 (lexico_mestre.csv) para a v2 (lexico_mestre_v2.csv), incorporando
-o parecer do especialista em cultura de Parintins (parecer_revisao_lexico.md) e a validação por
-dupla-anotação cega do termo "cobra" (anotacao_cobra_cega_preenchida.csv).
+revisões conceituais assistidas por LLM e a anotação contextual do termo "cobra". As sugestões
+e classificações de modelos foram inspecionadas pelos autores, mas não constituem parecer ou
+validação de um especialista humano em cultura de Parintins.
 
 ## 1. Estrutura em dois eixos (mudança estrutural)
 
@@ -56,25 +57,24 @@ encantado" e "homem-boto". Nomes próprios de botos específicos da mitologia (e
 "Boto Tucuxi", vistos no corpus) continuam contados dentro de "boto (animal)", não migrados para
 o núcleo mítico. Resolver isso exigiria o mesmo tipo de leitura contextual feita para "cobra".
 
-## 4. "Cobra": validação por dupla-anotação cega
+## 4. "Cobra": anotação contextual assistida por dois LLMs
 
-O termo "cobra"/"cobras" (114 ocorrências) foi classificado independentemente por mim e por um
-colega com familiaridade na cultura de Parintins, sem que a segunda pessoa visse a primeira
-classificação (ver `instrucoes_anotacao_cobra.md`).
+O termo "cobra"/"cobras" (114 ocorrências) recebeu duas classificações independentes sob o mesmo
+protocolo: uma produzida por Claude e outra por ChatGPT, sem que o segundo modelo recebesse os
+rótulos do primeiro (ver `annotations/cobra/instructions.md`). Os desacordos foram inspecionados
+e adjudicados pelos autores. Não houve anotador humano especialista.
 
 - **Concordância bruta**: 81,5% (66/81 itens comparáveis, após deduplicar refrões repetidos)
 - **Cohen's kappa**: 0,136 (baixo — a concordância bruta é inflada pelo desbalanceamento de
   classes; a maioria das respostas cai em "mítica")
-- Revisão manual das 15 discordâncias mostrou que a maior parte era inconsistência minha (mesma
-  frase repetida classificada de forma diferente em passagens diferentes da mesma toada), não
-  ambiguidade genuína
+- A adjudicação autoral das 15 discordâncias identificou várias inconsistências entre frases
+  repetidas, além de casos de ambiguidade contextual
 - **Distribuição final pós-adjudicação**: 104 míticas (91,2%), 7 animal (6,1%), 3 metáfora
   (2,6%)
 
 O léxico v2 usa **apenas as 104 ocorrências mítica-adjudicadas** para a entrada "cobra grande",
-não o total bruto de 114. O kappa baixo é reportado como limitação metodológica explícita — a
-classificação mítica/animal/metáfora, embora conceitualmente sólida, não é trivialmente
-reprodutível mesmo entre dois leitores cuidadosos.
+não o total bruto de 114. O kappa baixo é reportado como limitação explícita e mede apenas a
+consistência entre duas saídas de LLM, não confiabilidade interanotador humana.
 
 ## 5. Frequência documental além de frequência de token
 
@@ -110,28 +110,27 @@ termo pan-americano de uso geral, não regionalismo amazônico específico.
   Festival de Parintins. Recomenda-se reportar os resultados principais com e sem esses termos
   (análise de sensibilidade).
 
-## 8. Confundidor institucional — anotação enviada para revisão externa
+## 8. Confundidor institucional — anotação assistida por ChatGPT
 
 Pajé, cunhã(-poranga) e tuxaua(s) são simultaneamente léxico indígena/regional **e** itens
-oficiais avaliados no Festival de Parintins (constam na lista de quesitos julgados). O especialista
-recomendou uma "análise de sensibilidade que retire menções claramente institucionais".
+oficiais avaliados no Festival de Parintins (constam na lista de quesitos julgados). Uma análise
+de sensibilidade retira menções classificadas como claramente institucionais.
 
 Não existe um sinal textual confiável para distinguir automaticamente "pajé" usado como referência
 cultural/ritual de "pajé" usado como referência ao item avaliado — ambos usam exatamente a mesma
 palavra, no mesmo tipo de contexto poético. Por isso, ao contrário dos outros itens desta nota, esta
-correção não foi resolvida por regra automática: foi preparado um pacote de anotação manual (mesmo
-formato usado para "cobra") cobrindo as 306 toadas distintas em que os três termos aparecem (pajé:
+correção não foi resolvida por regra automática: foi preparado um pacote de anotação contextual
+cobrindo as 306 toadas distintas em que os três termos aparecem (pajé:
 160 toadas; cunhã isolado: 73; cunhã-poranga: 41; tuxaua: 32), com um exemplo de contexto
 representativo por toada, para classificação em institucional / cultural_ritual / indeterminado.
 
-Arquivos: `instrucoes_anotacao_institucional.md` + `anotacao_institucional_cega.csv`, enviados
-para o mesmo colega que validou a classificação de "cobra". Espera-se, com base no kappa baixo
-observado em "cobra" (0,136), que esta distinção também produza concordância limitada — isso será
-reportado com a mesma transparência, não como falha do método. Enquanto a resposta não retorna, o
-léxico v2 mantém pajé/cunhã(-poranga)/tuxaua no núcleo sem segregação institucional, com a nota
-"CONFUNDIDOR INSTITUCIONAL" sinalizando que a leitura desses números deve considerar essa mistura.
+Arquivos: `annotations/institutional_confound/instructions.md` e
+`annotations/institutional_confound/chatgpt_labels.csv`. O ChatGPT produziu um único conjunto de
+rótulos sob esse protocolo; os autores inspecionaram os resultados, mas não houve segunda
+anotação ou validação por especialista humano. Por isso, os valores ajustados são tratados como
+análise de sensibilidade e permanecem condicionais à classificação assistida por modelo.
 
-## 9. Termos candidatos não incluídos (sugestão do especialista)
+## 9. Termos candidatos não incluídos (sugestão da revisão assistida)
 
 Busca adicional recomendada, sem inclusão automática nesta versão: cunhantã, jaci, guaraci/kwaracy,
 paneiro, cuia, tacape, zarabatana, urucum, jenipapo, sapopema, pupunha, tucumã, cupuaçu, tambaqui,

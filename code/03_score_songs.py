@@ -2,7 +2,7 @@
 """
 Step 3 of the pipeline: compute, per toada, the raw and institutionally-adjusted
 core-lexicon ("nucleo") occurrence count and word count. This is the input to
-the temporal-trend (RQ1) and keyness (RQ2) analyses (scripts 04 and 05).
+the exploratory temporal (RQ2) and keyness (RQ1) analyses (scripts 04 and 05).
 
 INPUT: catalogo_completo.json (full lyric text; not published, see README) plus
 files that ARE published in this repository (annotations/, lexicon data).
@@ -11,7 +11,7 @@ Usage:
     python 03_score_songs.py --corpus path/to/catalogo_completo.json \
         --cobra-labels ../annotations/cobra/final_adjudicated_labels.json \
         --cobra-occurrences path/to/cobra_occurrences.json \
-        --institutional-labels ../annotations/institutional_confound/external_annotator_labels.csv \
+        --institutional-labels ../annotations/institutional_confound/chatgpt_labels.csv \
         --out per_song_scores.json
 """
 import json, re, csv, unicodedata, argparse
@@ -66,8 +66,8 @@ def main():
     ap.add_argument('--cobra-labels', required=True)
     ap.add_argument('--cobra-occurrences', required=True)
     ap.add_argument('--institutional-labels', required=True,
-                     help='the filled-in external annotator CSV, e.g. '
-                          'annotations/institutional_confound/external_annotator_labels.csv')
+                     help='the disclosed ChatGPT label CSV, e.g. '
+                          'annotations/institutional_confound/chatgpt_labels.csv')
     ap.add_argument('--out', default='per_song_scores.json')
     args = ap.parse_args()
 

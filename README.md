@@ -19,12 +19,14 @@ Caprichoso and Garantido, across a corpus of 1,565 toadas spanning 1989–2026.
   design decision behind the lexicon (v1 → v2), including known limitations.
 - `data/analysis_results/` — the output tables/figures reported in the paper: density by decade,
   keyness rankings (token and document frequency), trend-regression results.
-- `annotations/cobra/` — the full double-blind annotation record for disambiguating the word
-  *cobra* (mythical entity vs. animal vs. metaphor): blind annotation template, both annotators'
-  labels, adjudicated final labels, and the raw agreement/disagreement log
-  (Cohen's κ = 0.136, 81.5% raw agreement, 91.2% mythical after adjudication).
-- `annotations/institutional_confound/` — the same record for the single-annotator classification
-  of *pajé*/*cunhã*(-*poranga*)/*tuxaua* as institutional-Festival-item vs. cultural/ritual usage.
+- `annotations/cobra/` — the model-assisted annotation record for disambiguating *cobra*
+  (mythical entity vs. animal vs. metaphor): the fixed prompt/template, an initial Claude label
+  set, an independent ChatGPT label set, author-adjudicated final labels, and the agreement log
+  (Cohen's κ = 0.136, 81.5% raw agreement, 91.2% mythical after adjudication). This κ measures
+  consistency between two LLM outputs, not human inter-annotator reliability.
+- `annotations/institutional_confound/` — the fixed prompt and single ChatGPT classification of
+  *pajé*/*cunhã*(-*poranga*)/*tuxaua* as institutional-Festival-item vs. cultural/ritual usage.
+  These labels were inspected by the authors but not independently validated by a human expert.
 - `code/` — the full lexicon-construction, per-song scoring, and statistical-analysis pipeline
   (5 scripts, numbered in execution order). All 5 have been independently re-run end-to-end and
   verified to reproduce the exact numbers reported in the paper.
@@ -35,9 +37,8 @@ public redistribution of the full text corpus to carry unresolved copyright risk
 Section "Data and Code Availability"). Full lyric text is available upon reasonable request after
 publication of the paper — see venue contact details in the published version, since author
 contact information is withheld here to preserve double-blind anonymity during review. Short
-excerpts (under ~200 characters) used as annotation context are included within the
-`annotations/` CSVs, as these are quotations for methodological transparency rather than
-redistribution of complete works.
+context excerpts used for annotation are included within the `annotations/` CSVs for
+methodological transparency; no complete lyric is redistributed.
 
 ## Reproducing the analysis from raw lyrics
 
@@ -64,7 +65,7 @@ python 03_score_songs.py \
     --corpus catalogo_completo.json \
     --cobra-labels ../annotations/cobra/final_adjudicated_labels.json \
     --cobra-occurrences cobra_occurrences.json \
-    --institutional-labels ../annotations/institutional_confound/external_annotator_labels.csv \
+    --institutional-labels ../annotations/institutional_confound/chatgpt_labels.csv \
     --out per_song_scores.json
 
 python 04_temporal_analysis.py \
@@ -74,7 +75,7 @@ python 04_temporal_analysis.py \
 
 python 05_keyness_analysis.py \
     --scores per_song_scores.json \
-    --institutional-labels ../annotations/institutional_confound/external_annotator_labels.csv \
+    --institutional-labels ../annotations/institutional_confound/chatgpt_labels.csv \
     --out-token keyness_nucleo_token_freq.csv \
     --out-doc keyness_nucleo_doc_freq.csv
 ```
@@ -89,15 +90,14 @@ internal consistency without needing to re-run the pipeline.
 
 ## Known limitations (see paper and `data/lexicon_methodology.md` for full discussion)
 
-- Keyness tests (script 05) are reported uncorrected for multiple comparisons (46 simultaneous
-  tests); treat "significant" terms as candidates, not confirmed findings.
-- The institutional-confound annotation (single annotator, `annotations/institutional_confound/`)
-  was not blinded to which of the two groups each toada belonged to.
+- Script 05 applies Benjamini--Hochberg FDR separately to the 46 token-frequency and 46
+  document-frequency tests. Sixteen token-frequency differences survive at q<0.05; no
+  document-frequency difference does.
+- Both ambiguity analyses are LLM-assisted rather than human expert annotation. The
+  institutional-confound task uses one ChatGPT label set and was not blinded to group identity.
 - The "year" field in `corpus_metadata.csv` reflects album metadata, not necessarily original
   composition date.
-- In `05_keyness_analysis.py`, the institutional adjustment is applied to token frequency but
-  intentionally *not* to document frequency, to match the exact methodology already reported in
-  the paper (see in-code comment). This does not change which terms are found significant.
+- Institutional-use adjustment is applied consistently to both token and document frequency.
 
 ## Requirements
 

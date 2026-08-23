@@ -136,7 +136,7 @@ add('boiaçu','boiaçu;boiacu','Tupi/Nheengatu','entidade nomeada','Entidades m�
 add('cobra grande (mítica, adjudicada)','cobra;cobras;cobra grande;cobra-grande','Português regionalizado amazônico','entidade nomeada','Entidades míticas e encantados','nucleo','entidade narrativa/encantado',
     (cobra_tok_c+cobra_tok_g, cobra_tok_c, cobra_tok_g),
     (cobra_docs, cobra_doc_c, cobra_doc_g),
-    'contagem = apenas ocorrencias de "cobra" classificadas como miticas apos dupla-anotacao cega + adjudicacao (kappa=0.136 bruto; 91.2% concordancia pos-adjudicacao). Ver cobra_final_labels.json')
+    'contagem = apenas ocorrencias de "cobra" classificadas como miticas por dois LLMs e adjudicadas pelos autores (kappa entre modelos=0.136; 91.2% miticas apos adjudicacao). Ver annotations/cobra/')
 
 add('anhangá','anhangá;anhanga','Tupi/Nheengatu','entidade nomeada','Ritual, cura e cosmologia','nucleo','espírito / força cosmológica',
     (T('anhangá')['total'],T('anhangá')['Caprichoso'],T('anhangá')['Garantido']),
@@ -280,7 +280,7 @@ add('amazonas','amazonas','Topônimo','topônimo (autorreferencial)','Toponímia
 add('xamã','xamã;xama','Antropológico/globalizado','lexema comum','Ritual, cura e cosmologia','ampliado','',
     (T('xamã')['total'],T('xamã')['Caprichoso'],T('xamã')['Garantido']),
     (D('xamã')['total'],D('xamã')['Caprichoso'],D('xamã')['Garantido']),
-    'tratado separado de "paje" (confirmado pelos dois especialistas); indicador de mudanca discursiva ao longo das decadas')
+    'tratado separadamente de "paje"; indicador potencial de mudanca discursiva ao longo das decadas')
 
 add('caboclo','caboclo;caboclos;cabocla','Português regionalizado amazônico','lexema comum (identitário)','Personagens, identidades e papéis sociais','ampliado','',
     (T('caboclo')['total'],T('caboclo')['Caprichoso'],T('caboclo')['Garantido']),

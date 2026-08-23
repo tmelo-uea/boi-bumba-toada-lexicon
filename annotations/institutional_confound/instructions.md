@@ -1,5 +1,10 @@
 # Instruções — classificação institucional vs. cultural de "pajé", "cunhã(-poranga)" e "tuxaua"
 
+> **Proveniência da anotação.** Este protocolo foi fornecido ao ChatGPT para uma classificação
+> de modelo único. Os resultados foram inspecionados pelos autores, mas não receberam uma
+> segunda anotação humana ou validação por especialista cultural. O texto abaixo preserva o
+> protocolo de tarefa empregado, inclusive sua forma de interlocução.
+
 ## Contexto
 
 Este é um pedido de apoio para um artigo científico sobre as toadas do Festival Folclórico de
