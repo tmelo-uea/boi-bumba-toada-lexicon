@@ -4,8 +4,9 @@ Step 5 (RQ1): log-likelihood keyness (Dunning's G2) between Caprichoso and
 Garantido for every core-lexicon term, at both token frequency and document
 frequency (see paper Section 5.2 and Methodology note v2 for why both are
 reported: token frequency can be inflated by within-song chorus repetition).
-Institutionally-adjusted counts are used throughout for paje/cunha(-poranga)/
-tuxaua. Benjamini--Hochberg false-discovery-rate correction is applied
+Institutionally-adjusted counts are used by default for paje/cunha(-poranga)/
+tuxaua; --unadjusted retains their raw counts for sensitivity analysis.
+Benjamini--Hochberg false-discovery-rate correction is applied
 separately to the 46 token-frequency and 46 document-frequency tests.
 Produces Table 3 of the paper plus the full rankings as supplementary data.
 
@@ -88,12 +89,14 @@ def main():
     ap.add_argument('--institutional-labels', required=True)
     ap.add_argument('--out-token', default='keyness_nucleo_token_freq.csv')
     ap.add_argument('--out-doc', default='keyness_nucleo_doc_freq.csv')
+    ap.add_argument('--unadjusted', action='store_true',
+                    help='retain institutional uses of paje/cunha(-poranga)/tuxaua')
     args = ap.parse_args()
 
     per_song = json.load(open(args.scores, encoding='utf-8'))
     song_label = load_institutional_labels(args.institutional_labels)
 
-    # ---- token frequency totals, institutionally adjusted ----
+    # ---- token frequency totals ----
     term_totals = {'Caprichoso': defaultdict(int), 'Garantido': defaultdict(int)}
     doc_freq = {'Caprichoso': defaultdict(int), 'Garantido': defaultdict(int)}
     word_totals = {'Caprichoso': 0, 'Garantido': 0}
@@ -106,12 +109,12 @@ def main():
         adj = institutionally_adjusted(p, song_label)
 
         for term, c in p['simple_counts'].items():
-            v = adj[term] if term in CONFOUNDED_TERMS else c
+            v = adj[term] if term in CONFOUNDED_TERMS and not args.unadjusted else c
             term_totals[boi][term] += v
             if v > 0:
                 doc_freq[boi][term] += 1
         for term, c in p['phrase_counts'].items():
-            v = adj[term] if term in CONFOUNDED_TERMS else c
+            v = adj[term] if term in CONFOUNDED_TERMS and not args.unadjusted else c
             term_totals[boi][term] += v
             if v > 0:
                 doc_freq[boi][term] += 1

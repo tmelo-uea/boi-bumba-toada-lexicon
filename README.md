@@ -18,7 +18,8 @@ Caprichoso and Garantido, across a corpus of 1,565 toadas spanning 1989–2026.
 - `data/lexicon_methodology.md` — the full methodology note documenting every correction and
   design decision behind the lexicon (v1 → v2), including known limitations.
 - `data/analysis_results/` — the output tables/figures reported in the paper: density by decade,
-  keyness rankings (token and document frequency), trend-regression results.
+  institutionally-adjusted and unadjusted keyness rankings (token and document frequency), and
+  trend-regression results.
 - `annotations/cobra/` — the model-assisted annotation record for disambiguating *cobra*
   (mythical entity vs. animal vs. metaphor): the fixed prompt/template, an initial Claude label
   set, an independent ChatGPT label set, author-adjudicated final labels, and the agreement log
@@ -78,6 +79,14 @@ python 05_keyness_analysis.py \
     --institutional-labels ../annotations/institutional_confound/chatgpt_labels.csv \
     --out-token keyness_nucleo_token_freq.csv \
     --out-doc keyness_nucleo_doc_freq.csv
+
+# Sensitivity analysis retaining Festival-institutional uses
+python 05_keyness_analysis.py \
+    --scores per_song_scores.json \
+    --institutional-labels ../annotations/institutional_confound/chatgpt_labels.csv \
+    --unadjusted \
+    --out-token keyness_nucleo_token_freq_unadjusted.csv \
+    --out-doc keyness_nucleo_doc_freq_unadjusted.csv
 ```
 
 Note: `cobra_occurrences.json` (per-occurrence lyric context snippets for the *cobra*
@@ -98,6 +107,8 @@ internal consistency without needing to re-run the pipeline.
 - The "year" field in `corpus_metadata.csv` reflects album metadata, not necessarily original
   composition date.
 - Institutional-use adjustment is applied consistently to both token and document frequency.
+  The unadjusted sensitivity analysis retains exactly the same 16 BH-significant token terms and
+  again yields no BH-significant document-frequency term.
 
 ## Requirements
 
