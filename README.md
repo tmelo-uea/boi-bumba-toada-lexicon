@@ -1,6 +1,8 @@
 # Regional/Indigenous Lexicon in Boi-Bumbá Toadas — Data & Code
 
-Supplementary material for a LAMIR 2026 submission (anonymized for double-blind review).
+Supplementary material for the paper *Amazonian Regional and Indigenous Vocabulary in Parintins
+Boi-Bumbá Toadas: A Corpus-Based Comparison of Caprichoso and Garantido (1989–2026)*, presented at
+the 2nd Latin American Music Information Retrieval Workshop (LAMIR 2026).
 
 This repository accompanies a paper studying regional and Indigenous vocabulary in the lyrics
 (*toadas*) of the two rival groups of the Boi-Bumbá festival of Parintins (Amazonas, Brazil),
@@ -35,9 +37,8 @@ Caprichoso and Garantido, across a corpus of 1,565 toadas spanning 1989–2026.
 **Not included:** the full lyric text of the 1,565 toadas. The toadas are copyrighted creative
 works whose rights are held by their respective composers and/or other rights holders; we judged
 public redistribution of the full text corpus to carry unresolved copyright risk (see paper,
-Section "Data and Code Availability"). Full lyric text is available upon reasonable request after
-publication of the paper — see venue contact details in the published version, since author
-contact information is withheld here to preserve double-blind anonymity during review. Short
+Section "Data and Code Availability"). Full lyric text is available for research purposes upon reasonable request
+to the author (Tiago de Melo, tmelo@uea.edu.br). Short
 context excerpts used for annotation are included within the `annotations/` CSVs for
 methodological transparency; no complete lyric is redistributed.
 
@@ -123,5 +124,15 @@ is not included here and remains under the rights of its original composers/righ
 
 ## Citation
 
-Citation details will be added once the paper is de-anonymized / published. In the meantime,
-please cite the associated LAMIR 2026 submission.
+If you use this material, please cite:
+
+```bibtex
+@inproceedings{Melo2026LAMIR,
+  author    = {Tiago de Melo},
+  title     = {Amazonian Regional and Indigenous Vocabulary in Parintins Boi-Bumb{\'a} Toadas:
+               A Corpus-Based Comparison of Caprichoso and Garantido (1989--2026)},
+  booktitle = {Proceedings of the 2nd Latin American Music Information Retrieval Workshop (LAMIR)},
+  address   = {Belo Horizonte, Brazil},
+  year      = {2026}
+}
+```
