@@ -1,0 +1,11 @@
+{
+  "title": "Amazonian Regional and Indigenous Vocabulary in Parintins Boi-Bumbá Toadas (LAMIR 2026) — Lexicon, Corpus Metadata, Annotations, and Code",
+  "upload_type": "dataset",
+  "description": "Supplementary material for the LAMIR 2026 paper \"Amazonian Regional and Indigenous Vocabulary in Parintins Boi-Bumbá Toadas: A Corpus-Based Comparison of Caprichoso and Garantido (1989–2026)\". Includes corpus metadata for 1,565 toadas (title, album, year, composer, source URL), the 94-term two-axis regional/Indigenous lexicon, LLM-assisted annotation records with author adjudication, analysis results, and the full analysis pipeline. Full lyric text is not redistributed (copyright) and is available for research purposes upon reasonable request to the author.",
+  "creators": [
+    { "name": "de Melo, Tiago", "affiliation": "Universidade do Estado do Amazonas" }
+  ],
+  "license": "CC-BY-4.0",
+  "access_right": "open",
+  "keywords": ["Boi-Bumbá", "Parintins", "toadas", "lyrics", "Indigenous vocabulary", "Amazonia", "corpus linguistics", "music information retrieval", "LAMIR"]
+}
