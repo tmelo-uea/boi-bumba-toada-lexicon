@@ -1,5 +1,7 @@
 # Regional/Indigenous Lexicon in Boi-Bumbá Toadas — Data & Code
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23242242.svg)](https://doi.org/10.5281/zenodo.23242242)
+
 Supplementary material for the paper *Amazonian Regional and Indigenous Vocabulary in Parintins
 Boi-Bumbá Toadas: A Corpus-Based Comparison of Caprichoso and Garantido (1989–2026)*, presented at
 the 2nd Latin American Music Information Retrieval Workshop (LAMIR 2026).
@@ -134,5 +136,20 @@ If you use this material, please cite:
   booktitle = {Proceedings of the 2nd Latin American Music Information Retrieval Workshop (LAMIR)},
   address   = {Belo Horizonte, Brazil},
   year      = {2026}
+}
+```
+
+The version of this repository used in the paper (v1.0) is archived on Zenodo:
+
+```bibtex
+@dataset{Melo2026LAMIRData,
+  author    = {Tiago de Melo},
+  title     = {Amazonian Regional and Indigenous Vocabulary in Parintins Boi-Bumb{\'a} Toadas
+               (LAMIR 2026) -- Lexicon, Corpus Metadata, Annotations, and Code},
+  version   = {v1.0},
+  publisher = {Zenodo},
+  year      = {2026},
+  doi       = {10.5281/zenodo.23242242},
+  url       = {https://doi.org/10.5281/zenodo.23242242}
 }
 ```
